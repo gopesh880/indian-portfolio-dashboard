@@ -98,10 +98,10 @@ st.markdown(
 
     .insight-box {
         background-color: #111827;
-        padding: 15px;
-        border-radius: 12px;
+        padding: 18px;
+        border-radius: 14px;
         border-left: 5px solid #3B82F6;
-        margin-bottom: 12px;
+        margin-bottom: 15px;
     }
 
     </style>
@@ -116,14 +116,16 @@ st.markdown(
 st.markdown(
     """
     <div class="hero-box">
+
         <div class="hero-title">
             Indian Portfolio & Risk Intelligence Dashboard
         </div>
 
         <div class="hero-subtitle">
-            Analyze portfolio diversification, risk exposure, SIP growth,
-            and long-term investment projections.
+            Analyze portfolio diversification, risk exposure,
+            SIP growth, and long-term investment projections.
         </div>
+
     </div>
     """,
     unsafe_allow_html=True
@@ -169,9 +171,13 @@ portfolio_df = pd.read_csv("data/sample_portfolio.csv")
 # CALCULATIONS
 # -------------------------------------------------
 
-weighted_return = calculate_weighted_return(portfolio_df)
+weighted_return = calculate_weighted_return(
+    portfolio_df
+)
 
-risk_score = calculate_risk_score(portfolio_df)
+risk_score = calculate_risk_score(
+    portfolio_df
+)
 
 future_value = calculate_future_value(
     investment_amount,
@@ -217,8 +223,13 @@ with col1:
     st.markdown(
         f"""
         <div class="metric-card">
-            <div class="metric-title">Expected Return</div>
-            <div class="metric-value">{weighted_return:.2f}%</div>
+            <div class="metric-title">
+                Expected Return
+            </div>
+
+            <div class="metric-value">
+                {weighted_return:.2f}%
+            </div>
         </div>
         """,
         unsafe_allow_html=True
@@ -228,8 +239,13 @@ with col2:
     st.markdown(
         f"""
         <div class="metric-card">
-            <div class="metric-title">Risk Score</div>
-            <div class="metric-value">{risk_score}</div>
+            <div class="metric-title">
+                Risk Score
+            </div>
+
+            <div class="metric-value">
+                {risk_score}
+            </div>
         </div>
         """,
         unsafe_allow_html=True
@@ -239,8 +255,13 @@ with col3:
     st.markdown(
         f"""
         <div class="metric-card">
-            <div class="metric-title">Portfolio Health</div>
-            <div class="metric-value">{health_score}/100</div>
+            <div class="metric-title">
+                Portfolio Health
+            </div>
+
+            <div class="metric-value">
+                {health_score}/100
+            </div>
         </div>
         """,
         unsafe_allow_html=True
@@ -250,8 +271,13 @@ with col4:
     st.markdown(
         f"""
         <div class="metric-card">
-            <div class="metric-title">Projected Value</div>
-            <div class="metric-value">₹{future_value:,.0f}</div>
+            <div class="metric-title">
+                Projected Value
+            </div>
+
+            <div class="metric-value">
+                ₹{future_value:,.0f}
+            </div>
         </div>
         """,
         unsafe_allow_html=True
@@ -281,8 +307,13 @@ with analytics_tab:
         unsafe_allow_html=True
     )
 
-    allocation_chart = create_allocation_chart(portfolio_df)
-    returns_chart = create_returns_chart(portfolio_df)
+    allocation_chart = create_allocation_chart(
+        portfolio_df
+    )
+
+    returns_chart = create_returns_chart(
+        portfolio_df
+    )
 
     chart_col1, chart_col2 = st.columns(2)
 
@@ -321,7 +352,7 @@ with analytics_tab:
 with simulation_tab:
 
     st.markdown(
-        '<div class="section-title">Monte Carlo Simulation</div>',
+        '<div class="section-title">Simulation & Investor Insights</div>',
         unsafe_allow_html=True
     )
 
@@ -334,7 +365,7 @@ with simulation_tab:
         use_container_width=True
     )
 
-    st.subheader("Investor Insights")
+    st.subheader("Portfolio Insights")
 
     insights = generate_portfolio_insights(
         portfolio_df,
@@ -353,16 +384,40 @@ with simulation_tab:
             unsafe_allow_html=True
         )
 
-    st.subheader("Suggested Investment Ideas")
+    # -------------------------------------------------
+    # INVESTMENT IDEAS
+    # -------------------------------------------------
+
+    st.subheader("Explore Investment Ideas")
 
     recommendation_df = get_investment_suggestions(
         investor_profile
     )
 
-    st.dataframe(
-        recommendation_df,
-        use_container_width=True
-    )
+    for _, row in recommendation_df.iterrows():
+
+        st.markdown(
+            f"""
+            <div class="insight-box">
+
+                <h4>{row["Investment"]}</h4>
+
+                <p>
+                    <b>Category:</b> {row["Category"]}
+                </p>
+
+                <p>
+                    <b>Risk:</b> {row["Risk"]}
+                </p>
+
+                <p>
+                    {row["Why"]}
+                </p>
+
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 # -------------------------------------------------
 # EDUCATION TAB
@@ -389,6 +444,10 @@ with education_tab:
 
     st.info(
         "Inflation reduces purchasing power over time, which is why inflation-adjusted returns matter."
+    )
+
+    st.info(
+        "Monte Carlo simulation estimates multiple possible future investment outcomes using probability-based scenarios."
     )
 
 # -------------------------------------------------
