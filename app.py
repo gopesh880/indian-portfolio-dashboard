@@ -15,7 +15,9 @@ from utils.insights import (
     calculate_health_score
 )
 
-from utils.simulations import monte_carlo_simulation
+from utils.simulations import (
+    monte_carlo_simulation
+)
 
 from utils.recommendations import (
     get_investment_suggestions
@@ -33,7 +35,7 @@ from charts.portfolio_charts import (
 # -------------------------------------------------
 
 st.set_page_config(
-    page_title="Portfolio Intelligence Dashboard",
+    page_title="Indian Portfolio Dashboard",
     layout="wide"
 )
 
@@ -41,90 +43,130 @@ st.set_page_config(
 # CUSTOM CSS
 # -------------------------------------------------
 
-st.markdown("""
-<style>
+st.markdown(
+    """
+    <style>
 
-.main {
-    background-color: #0E1117;
-    color: white;
-}
+    .main {
+        background-color: #0B1120;
+        color: white;
+    }
 
-.hero-box {
-    background: linear-gradient(135deg, #1f2937, #111827);
-    padding: 2rem;
-    border-radius: 20px;
-    margin-bottom: 2rem;
-    border: 1px solid #374151;
-}
+    .hero-box {
+        background: linear-gradient(
+            135deg,
+            #172554,
+            #0F172A
+        );
 
-.hero-title {
-    font-size: 42px;
-    font-weight: 700;
-    color: white;
-}
+        padding: 2rem;
 
-.hero-subtitle {
-    font-size: 18px;
-    color: #9CA3AF;
-    margin-top: 10px;
-}
+        border-radius: 20px;
 
-.metric-card {
-    background-color: #1F2937;
-    padding: 20px;
-    border-radius: 18px;
-    border: 1px solid #374151;
-    text-align: center;
-}
+        border: 1px solid #334155;
 
-.metric-title {
-    font-size: 15px;
-    color: #9CA3AF;
-}
+        margin-bottom: 2rem;
+    }
 
-.metric-value {
-    font-size: 28px;
-    font-weight: bold;
-    color: white;
-}
+    .hero-title {
+        font-size: 46px;
 
-.section-title {
-    font-size: 28px;
-    font-weight: 600;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    color: white;
-}
+        font-weight: 700;
 
-.insight-box {
-    background-color: #111827;
-    padding: 18px;
-    border-radius: 14px;
-    border-left: 5px solid #3B82F6;
-    margin-bottom: 15px;
-}
+        color: white;
 
-</style>
-""", unsafe_allow_html=True)
+        margin-bottom: 10px;
+    }
+
+    .hero-subtitle {
+        font-size: 18px;
+
+        color: #CBD5E1;
+    }
+
+    .metric-card {
+
+        background-color: #111827;
+
+        padding: 25px;
+
+        border-radius: 18px;
+
+        border: 1px solid #334155;
+
+        text-align: center;
+    }
+
+    .metric-title {
+
+        color: #94A3B8;
+
+        font-size: 15px;
+
+        margin-bottom: 10px;
+    }
+
+    .metric-value {
+
+        color: white;
+
+        font-size: 34px;
+
+        font-weight: bold;
+    }
+
+    .section-title {
+
+        font-size: 32px;
+
+        font-weight: 700;
+
+        color: white;
+
+        margin-top: 10px;
+
+        margin-bottom: 20px;
+    }
+
+    .insight-box {
+
+        background-color: #111827;
+
+        border-left: 5px solid #2563EB;
+
+        padding: 20px;
+
+        border-radius: 14px;
+
+        margin-bottom: 16px;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # -------------------------------------------------
 # HERO SECTION
 # -------------------------------------------------
 
-st.markdown("""
-<div class="hero-box">
+st.markdown(
+    """
+    <div class="hero-box">
 
-    <div class="hero-title">
-        Indian Portfolio & Risk Intelligence Dashboard
+        <div class="hero-title">
+            Indian Portfolio & Risk Intelligence Dashboard
+        </div>
+
+        <div class="hero-subtitle">
+            Analyze diversification, risk exposure, SIP growth,
+            and long-term wealth projections.
+        </div>
+
     </div>
-
-    <div class="hero-subtitle">
-        Analyze portfolio diversification, risk exposure,
-        SIP growth, and long-term investment projections.
-    </div>
-
-</div>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
 # -------------------------------------------------
 # SIDEBAR
@@ -160,7 +202,9 @@ investor_profile = st.sidebar.selectbox(
 # LOAD DATA
 # -------------------------------------------------
 
-portfolio_df = pd.read_csv("data/sample_portfolio.csv")
+portfolio_df = pd.read_csv(
+    "data/sample_portfolio.csv"
+)
 
 # -------------------------------------------------
 # CALCULATIONS
@@ -215,56 +259,80 @@ simulation_df = monte_carlo_simulation(
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">
-            Expected Return
-        </div>
 
-        <div class="metric-value">
-            {weighted_return:.2f}%
+    st.markdown(
+        f"""
+        <div class="metric-card">
+
+            <div class="metric-title">
+                Expected Return
+            </div>
+
+            <div class="metric-value">
+                {weighted_return:.2f}%
+            </div>
+
         </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """,
+        unsafe_allow_html=True
+    )
 
 with col2:
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">
-            Risk Score
-        </div>
 
-        <div class="metric-value">
-            {risk_score}
+    st.markdown(
+        f"""
+        <div class="metric-card">
+
+            <div class="metric-title">
+                Risk Score
+            </div>
+
+            <div class="metric-value">
+                {risk_score}
+            </div>
+
         </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """,
+        unsafe_allow_html=True
+    )
 
 with col3:
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">
-            Portfolio Health
-        </div>
 
-        <div class="metric-value">
-            {health_score}/100
+    st.markdown(
+        f"""
+        <div class="metric-card">
+
+            <div class="metric-title">
+                Portfolio Health
+            </div>
+
+            <div class="metric-value">
+                {health_score}/100
+            </div>
+
         </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """,
+        unsafe_allow_html=True
+    )
 
 with col4:
-    st.markdown(f"""
-    <div class="metric-card">
-        <div class="metric-title">
-            Projected Value
-        </div>
 
-        <div class="metric-value">
-            ₹{future_value:,.0f}
+    st.markdown(
+        f"""
+        <div class="metric-card">
+
+            <div class="metric-title">
+                Projected Value
+            </div>
+
+            <div class="metric-value">
+                ₹{future_value:,.0f}
+            </div>
+
         </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """,
+        unsafe_allow_html=True
+    )
 
 st.write("")
 st.write("")
@@ -298,15 +366,17 @@ with analytics_tab:
         portfolio_df
     )
 
-    chart_col1, chart_col2 = st.columns(2)
+    col_chart1, col_chart2 = st.columns(2)
 
-    with chart_col1:
+    with col_chart1:
+
         st.plotly_chart(
             allocation_chart,
             use_container_width=True
         )
 
-    with chart_col2:
+    with col_chart2:
+
         st.plotly_chart(
             returns_chart,
             use_container_width=True
@@ -360,11 +430,18 @@ with simulation_tab:
 
     for insight in insights:
 
-        st.markdown(f"""
-        <div class="insight-box">
-            {insight}
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(
+            f"""
+            <div class="insight-box">
+
+                <p style="color:white;">
+                    {insight}
+                </p>
+
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
     # -------------------------------------------------
     # INVESTMENT IDEAS
@@ -378,25 +455,30 @@ with simulation_tab:
 
     for _, row in recommendation_df.iterrows():
 
-        st.markdown(f"""
-        <div class="insight-box">
+        st.markdown(
+            f"""
+            <div class="insight-box">
 
-            <h4>{row['Investment']}</h4>
+                <h4 style="color:white;">
+                    {row['Investment']}
+                </h4>
 
-            <p>
-                <b>Category:</b> {row['Category']}
-            </p>
+                <p style="color:#CBD5E1;">
+                    <b>Category:</b> {row['Category']}
+                </p>
 
-            <p>
-                <b>Risk:</b> {row['Risk']}
-            </p>
+                <p style="color:#CBD5E1;">
+                    <b>Risk:</b> {row['Risk']}
+                </p>
 
-            <p>
-                {row['Why']}
-            </p>
+                <p style="color:#CBD5E1;">
+                    {row['Why']}
+                </p>
 
-        </div>
-        """, unsafe_allow_html=True)
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 # -------------------------------------------------
 # EDUCATION TAB
@@ -410,15 +492,15 @@ with education_tab:
     )
 
     st.info(
-        "Diversification means spreading investments across multiple asset categories to reduce risk."
+        "Diversification means spreading investments across multiple asset categories to reduce overall portfolio risk."
     )
 
     st.info(
-        "SIP investing helps investors build wealth consistently over long periods through compounding."
+        "SIP investing helps investors build wealth consistently through long-term compounding."
     )
 
     st.info(
-        "Small-cap investments may provide higher growth potential but also carry higher volatility."
+        "Small-cap investments may offer higher growth potential but also carry higher volatility."
     )
 
     st.info(
