@@ -38,7 +38,7 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-## Why This Project Matters
+
 
 This project focuses on realistic portfolio analytics instead of fake AI stock prediction.
 
@@ -48,12 +48,3 @@ It demonstrates:
 - data visualization
 - probabilistic thinking
 - dashboard engineering
-
-## Future Improvements
-
-- Live Nifty benchmark tracking
-- Sharpe ratio
-- Correlation heatmaps
-- Portfolio optimization
-- Tax estimation
-- SQLite portfolio storage
