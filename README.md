@@ -24,19 +24,7 @@ A modern finance analytics dashboard built using Python and Streamlit for Indian
 - Plotly
 - yfinance
 
-## How To Run
-
-### 1. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 2. Start the app
-
-```bash
-streamlit run app.py
-```
+https://indian-portfolio-dashboard-jbgumwwkev3jpl5zarppez.streamlit.app/
 
 
 
