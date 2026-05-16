@@ -1,6 +1,7 @@
 
 import streamlit as st
 import pandas as pd
+from utils.recommendations import get_investment_suggestions
 
 from utils.calculations import (
     calculate_weighted_return,
@@ -194,3 +195,23 @@ st.info(
 st.info(
     "Inflation reduces purchasing power over time, which is why inflation-adjusted returns matter."
 )
+st.info(
+    "Inflation reduces purchasing power over time, which is why inflation-adjusted returns matter."
+)
+
+
+st.subheader("Suggested Investments For Your Profile")
+
+recommendation_df = get_investment_suggestions(
+    investor_profile
+)
+
+st.dataframe(recommendation_df)
+
+for _, row in recommendation_df.iterrows():
+
+    st.success(
+        f"{row['Investment']} ({row['Category']})\n\n"
+        f"Risk Level: {row['Risk']}\n\n"
+        f"Why Suggested: {row['Why']}"
+    )
