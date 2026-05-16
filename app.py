@@ -17,7 +17,9 @@ from utils.insights import (
 
 from utils.simulations import monte_carlo_simulation
 
-from utils.recommendations import get_investment_suggestions
+from utils.recommendations import (
+    get_investment_suggestions
+)
 
 from charts.portfolio_charts import (
     create_allocation_chart,
@@ -32,104 +34,97 @@ from charts.portfolio_charts import (
 
 st.set_page_config(
     page_title="Portfolio Intelligence Dashboard",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="wide"
 )
 
 # -------------------------------------------------
 # CUSTOM CSS
 # -------------------------------------------------
 
-st.markdown(
-    """
-    <style>
+st.markdown("""
+<style>
 
-    .main {
-        background-color: #0E1117;
-        color: white;
-    }
+.main {
+    background-color: #0E1117;
+    color: white;
+}
 
-    .hero-box {
-        background: linear-gradient(135deg, #1f2937, #111827);
-        padding: 2rem;
-        border-radius: 20px;
-        margin-bottom: 2rem;
-        border: 1px solid #374151;
-    }
+.hero-box {
+    background: linear-gradient(135deg, #1f2937, #111827);
+    padding: 2rem;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    border: 1px solid #374151;
+}
 
-    .hero-title {
-        font-size: 42px;
-        font-weight: 700;
-        color: white;
-    }
+.hero-title {
+    font-size: 42px;
+    font-weight: 700;
+    color: white;
+}
 
-    .hero-subtitle {
-        font-size: 18px;
-        color: #9CA3AF;
-        margin-top: 10px;
-    }
+.hero-subtitle {
+    font-size: 18px;
+    color: #9CA3AF;
+    margin-top: 10px;
+}
 
-    .metric-card {
-        background-color: #1F2937;
-        padding: 20px;
-        border-radius: 18px;
-        border: 1px solid #374151;
-        text-align: center;
-    }
+.metric-card {
+    background-color: #1F2937;
+    padding: 20px;
+    border-radius: 18px;
+    border: 1px solid #374151;
+    text-align: center;
+}
 
-    .metric-title {
-        font-size: 15px;
-        color: #9CA3AF;
-    }
+.metric-title {
+    font-size: 15px;
+    color: #9CA3AF;
+}
 
-    .metric-value {
-        font-size: 28px;
-        font-weight: bold;
-        color: white;
-    }
+.metric-value {
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+}
 
-    .section-title {
-        font-size: 28px;
-        font-weight: 600;
-        margin-top: 20px;
-        margin-bottom: 20px;
-        color: white;
-    }
+.section-title {
+    font-size: 28px;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: white;
+}
 
-    .insight-box {
-        background-color: #111827;
-        padding: 18px;
-        border-radius: 14px;
-        border-left: 5px solid #3B82F6;
-        margin-bottom: 15px;
-    }
+.insight-box {
+    background-color: #111827;
+    padding: 18px;
+    border-radius: 14px;
+    border-left: 5px solid #3B82F6;
+    margin-bottom: 15px;
+}
 
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+</style>
+""", unsafe_allow_html=True)
 
 # -------------------------------------------------
 # HERO SECTION
 # -------------------------------------------------
 
-st.markdown(
-    """
-    <div class="hero-box">
+st.markdown("""
+<div class="hero-box">
 
-        <div class="hero-title">
-            Indian Portfolio & Risk Intelligence Dashboard
-        </div>
-
-        <div class="hero-subtitle">
-            Analyze portfolio diversification, risk exposure,
-            SIP growth, and long-term investment projections.
-        </div>
-
+    <div class="hero-title">
+        Indian Portfolio & Risk Intelligence Dashboard
     </div>
-    """,
-    unsafe_allow_html=True
-)
+
+    <div class="hero-subtitle">
+        Analyze portfolio diversification, risk exposure,
+        SIP growth, and long-term investment projections.
+    </div>
+
+</div>
+""", unsafe_allow_html=True)
 
 # -------------------------------------------------
 # SIDEBAR
@@ -214,74 +209,62 @@ simulation_df = monte_carlo_simulation(
 )
 
 # -------------------------------------------------
-# KPI SECTION
+# KPI CARDS
 # -------------------------------------------------
 
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    st.markdown(
-        f"""
-        <div class="metric-card">
-            <div class="metric-title">
-                Expected Return
-            </div>
-
-            <div class="metric-value">
-                {weighted_return:.2f}%
-            </div>
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">
+            Expected Return
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+
+        <div class="metric-value">
+            {weighted_return:.2f}%
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 with col2:
-    st.markdown(
-        f"""
-        <div class="metric-card">
-            <div class="metric-title">
-                Risk Score
-            </div>
-
-            <div class="metric-value">
-                {risk_score}
-            </div>
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">
+            Risk Score
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+
+        <div class="metric-value">
+            {risk_score}
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 with col3:
-    st.markdown(
-        f"""
-        <div class="metric-card">
-            <div class="metric-title">
-                Portfolio Health
-            </div>
-
-            <div class="metric-value">
-                {health_score}/100
-            </div>
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">
+            Portfolio Health
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+
+        <div class="metric-value">
+            {health_score}/100
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 with col4:
-    st.markdown(
-        f"""
-        <div class="metric-card">
-            <div class="metric-title">
-                Projected Value
-            </div>
-
-            <div class="metric-value">
-                ₹{future_value:,.0f}
-            </div>
+    st.markdown(f"""
+    <div class="metric-card">
+        <div class="metric-title">
+            Projected Value
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+
+        <div class="metric-value">
+            ₹{future_value:,.0f}
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 st.write("")
 st.write("")
@@ -317,15 +300,17 @@ with analytics_tab:
 
     chart_col1, chart_col2 = st.columns(2)
 
-    chart_col1.plotly_chart(
-        allocation_chart,
-        use_container_width=True
-    )
+    with chart_col1:
+        st.plotly_chart(
+            allocation_chart,
+            use_container_width=True
+        )
 
-    chart_col2.plotly_chart(
-        returns_chart,
-        use_container_width=True
-    )
+    with chart_col2:
+        st.plotly_chart(
+            returns_chart,
+            use_container_width=True
+        )
 
     growth_chart = create_growth_chart(
         investment_amount,
@@ -375,14 +360,11 @@ with simulation_tab:
 
     for insight in insights:
 
-        st.markdown(
-            f"""
-            <div class="insight-box">
-                {insight}
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+        st.markdown(f"""
+        <div class="insight-box">
+            {insight}
+        </div>
+        """, unsafe_allow_html=True)
 
     # -------------------------------------------------
     # INVESTMENT IDEAS
@@ -396,28 +378,25 @@ with simulation_tab:
 
     for _, row in recommendation_df.iterrows():
 
-        st.markdown(
-            f"""
-            <div class="insight-box">
+        st.markdown(f"""
+        <div class="insight-box">
 
-                <h4>{row["Investment"]}</h4>
+            <h4>{row['Investment']}</h4>
 
-                <p>
-                    <b>Category:</b> {row["Category"]}
-                </p>
+            <p>
+                <b>Category:</b> {row['Category']}
+            </p>
 
-                <p>
-                    <b>Risk:</b> {row["Risk"]}
-                </p>
+            <p>
+                <b>Risk:</b> {row['Risk']}
+            </p>
 
-                <p>
-                    {row["Why"]}
-                </p>
+            <p>
+                {row['Why']}
+            </p>
 
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+        </div>
+        """, unsafe_allow_html=True)
 
 # -------------------------------------------------
 # EDUCATION TAB
