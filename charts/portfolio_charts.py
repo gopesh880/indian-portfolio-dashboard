@@ -1,62 +1,90 @@
-
 import plotly.express as px
 import pandas as pd
+
+# -------------------------------------------------
+# PORTFOLIO ALLOCATION PIE CHART
+# -------------------------------------------------
 
 def create_allocation_chart(df):
 
     fig = px.pie(
         df,
-        values="Allocation",
-        names="Asset",
+        names="Investment",
+        values="Allocation (%)",
         title="Portfolio Allocation"
     )
 
-    fig.update_layout(template="plotly_dark")
+    fig.update_layout(
+        template="plotly_dark"
+    )
 
     return fig
+
+# -------------------------------------------------
+# RETURNS BAR CHART
+# -------------------------------------------------
 
 def create_returns_chart(df):
 
     fig = px.bar(
         df,
-        x="Asset",
-        y="Expected_Return",
+        x="Investment",
+        y="Expected Return (%)",
+        color="Expected Return (%)",
         title="Expected Asset Returns"
     )
 
-    fig.update_layout(template="plotly_dark")
+    fig.update_layout(
+        template="plotly_dark"
+    )
 
     return fig
 
-def create_growth_chart(initial_amount, annual_return, years):
+# -------------------------------------------------
+# INVESTMENT GROWTH CHART
+# -------------------------------------------------
 
-    annual_return = annual_return / 100
+def create_growth_chart(
+    principal,
+    annual_return,
+    years
+):
 
-    values = []
-    timeline = []
+    growth_data = []
+
+    current_value = principal
 
     for year in range(years + 1):
 
-        value = initial_amount * ((1 + annual_return) ** year)
+        growth_data.append({
+            "Year": year,
+            "Portfolio Value": round(current_value)
+        })
 
-        values.append(value)
-        timeline.append(year)
+        current_value *= (
+            1 + annual_return / 100
+        )
 
-    growth_df = pd.DataFrame({
-        "Year": timeline,
-        "Portfolio Value": values
-    })
+    growth_df = pd.DataFrame(
+        growth_data
+    )
 
     fig = px.line(
         growth_df,
         x="Year",
         y="Portfolio Value",
-        title="Portfolio Growth Projection"
+        title="Projected Portfolio Growth"
     )
 
-    fig.update_layout(template="plotly_dark")
+    fig.update_layout(
+        template="plotly_dark"
+    )
 
     return fig
+
+# -------------------------------------------------
+# MONTE CARLO CHART
+# -------------------------------------------------
 
 def create_monte_carlo_chart(simulation_df):
 
@@ -67,7 +95,8 @@ def create_monte_carlo_chart(simulation_df):
 
     fig.update_layout(
         template="plotly_dark",
-        showlegend=False
+        xaxis_title="Years",
+        yaxis_title="Portfolio Value"
     )
 
     return fig
