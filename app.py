@@ -259,18 +259,17 @@ st.markdown(
 st.markdown(
     """
     <section class="hero">
-        <p class="hero-eyebrow">Portfolio intelligence</p>
-        <h1>Indian Portfolio & Risk Dashboard</h1>
+        <p class="hero-eyebrow">Fund Management Analytics</p>
+        <h1>Mutual Fund & Portfolio Analytics Dashboard</h1>
         <p>
-            Track allocation quality, expected returns, downside range,
-            SIP growth, inflation impact, and practical investment ideas
-            from one clean dashboard.
+            Analyze portfolio allocation, diversification, risk,
+            expected returns, inflation impact and long-term
+            wealth creation using data-driven investment analytics.
         </p>
     </section>
     """,
     unsafe_allow_html=True,
 )
-
 st.sidebar.title("Investor Profile")
 st.sidebar.caption("Adjust assumptions to refresh projections instantly.")
 
