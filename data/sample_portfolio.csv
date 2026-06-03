@@ -1,8 +1,9 @@
-Investment,Category,Allocation (%),Expected Return (%),Risk
-Nifty 50 Index Fund,Large Cap Index,30,12,Low
-Parag Parikh Flexi Cap Fund,Flexi Cap,20,15,Moderate
-Motilal Oswal Midcap Fund,Mid Cap,15,17,High
-Nippon India Small Cap Fund,Small Cap,10,20,Very High
-Gold ETF,Gold,10,8,Low
-HDFC Corporate Bond Fund,Debt Fund,10,7,Low
-Bitcoin,Crypto,5,15,Very High
+Investment,Category,Allocation (%),Expected Return (%),Risk,Sharpe Ratio,Risk Score
+
+Nifty 50 Index Fund,Large Cap Index,30,12,Low,1.1,1
+Parag Parikh Flexi Cap Fund,Flexi Cap,20,15,Moderate,1.3,2
+Motilal Oswal Midcap Fund,Mid Cap,15,17,High,1.0,3
+Nippon India Small Cap Fund,Small Cap,10,20,Very High,0.9,4
+Gold ETF,Gold,10,8,Low,0.8,1
+HDFC Corporate Bond Fund,Debt Fund,10,7,Low,1.2,1
+ICICI Prudential Technology Fund,Sector Fund,5,14,High,0.9,3
