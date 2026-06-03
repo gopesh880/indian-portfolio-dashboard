@@ -34,7 +34,7 @@ REQUIRED_COLUMNS = {
 
 
 st.set_page_config(
-    page_title="Indian Portfolio Dashboard",
+    page_title="Mutual Fund & Portfolio Analytics Dashboard",
     layout="wide",
 )
 
