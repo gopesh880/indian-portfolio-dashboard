@@ -144,3 +144,36 @@ def get_investment_suggestions(profile):
     }
 
     return pd.DataFrame(suggestions[profile])
+def get_asset_allocation(profile):
+
+```
+allocations = {
+
+    "Conservative": {
+        "Equity": 40,
+        "Debt": 50,
+        "Gold": 10,
+        "Expected Return": 8,
+        "Risk Score": "Low"
+    },
+
+    "Moderate": {
+        "Equity": 60,
+        "Debt": 30,
+        "Gold": 10,
+        "Expected Return": 11,
+        "Risk Score": "Moderate"
+    },
+
+    "Aggressive": {
+        "Equity": 80,
+        "Debt": 10,
+        "Gold": 10,
+        "Expected Return": 14,
+        "Risk Score": "High"
+    }
+
+}
+
+return allocations[profile]
+```
