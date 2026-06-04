@@ -21,7 +21,7 @@ from utils.insights import calculate_health_score, generate_portfolio_insights
 from utils.simulations import monte_carlo_simulation
 from utils.recommendations import (
     get_investment_suggestions,
-    get_asset_allocation,
+    get_asset_allocation, get_rebalancing_suggestions,
 )
 
 
@@ -484,3 +484,21 @@ with education_tab:
             st.markdown(f'<div class="concept-card">{concept}</div>', unsafe_allow_html=True)
 
 st.caption("Educational dashboard only. This is not financial advice.")
+current_allocation = {
+    "Equity": 75,
+    "Debt": 10,
+    "Gold": 10
+}
+target_allocation = {
+    "Equity": recommended_allocation["Equity"],
+    "Debt": recommended_allocation["Debt"],
+    "Gold": recommended_allocation["Gold"]
+}
+rebalancing_suggestions = get_rebalancing_suggestions(
+    current_allocation,
+    target_allocation
+)
+st.subheader("Portfolio Rebalancing")
+
+for suggestion in rebalancing_suggestions:
+    st.write(suggestion)
