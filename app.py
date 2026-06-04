@@ -18,8 +18,11 @@ from utils.calculations import (
     calculate_weighted_return,
 )
 from utils.insights import calculate_health_score, generate_portfolio_insights
-from utils.recommendations import get_investment_suggestions
 from utils.simulations import monte_carlo_simulation
+from utils.recommendations import (
+    get_investment_suggestions,
+    get_asset_allocation,
+)
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -287,15 +290,57 @@ sip_amount = st.sidebar.number_input(
     step=1000,
     format="%d",
 )
-investment_duration = st.sidebar.slider("Investment Duration", 1, 40, 15)
+investment_duration = st.sidebar.slider(
+    "Investment Duration",
+    1,
+    40,
+    15,
+)
+
 investor_profile = st.sidebar.selectbox(
     "Investor Profile",
     ["Conservative", "Moderate", "Aggressive"],
     index=1,
 )
-inflation_rate = st.sidebar.slider("Inflation Assumption", 3.0, 9.0, 6.0, 0.5)
-volatility = st.sidebar.slider("Simulation Volatility", 8, 30, 18)
+recommended_allocation = get_asset_allocation(
+    investor_profile
+)
 
+st.sidebar.subheader("Recommended Allocation")
+
+col1, col2 = st.sidebar.columns(2)
+
+with col1:
+    st.metric(
+        "Equity",
+        f"{recommended_allocation['Equity']}%"
+    )
+
+    st.metric(
+        "Gold",
+        f"{recommended_allocation['Gold']}%"
+    )
+
+with col2:
+    st.metric(
+        "Debt",
+        f"{recommended_allocation['Debt']}%"
+    )
+
+inflation_rate = st.sidebar.slider(
+    "Inflation Assumption",
+    3.0,
+    9.0,
+    6.0,
+    0.5,
+)
+
+volatility = st.sidebar.slider(
+    "Simulation Volatility",
+    8,
+    30,
+    18,
+)
 try:
     portfolio_df = load_portfolio(DATA_PATH)
 except Exception as exc:
