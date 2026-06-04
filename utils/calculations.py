@@ -203,3 +203,18 @@ def calculate_portfolio_summary(df):
         "alpha": alpha,
         "sharpe_ratio": sharpe_ratio
     }
+def calculate_sharpe_ratio(
+    portfolio_return,
+    risk_free_rate,
+    volatility
+):
+
+    sharpe_ratio = (
+        portfolio_return
+        - risk_free_rate
+    ) / volatility
+
+    return round(
+        sharpe_ratio,
+        2
+    )
