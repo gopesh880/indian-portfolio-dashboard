@@ -15,7 +15,7 @@ from utils.calculations import (
     calculate_inflation_adjusted_value,
     calculate_risk_score,
     calculate_sip_future_value,
-    calculate_weighted_return,
+    calculate_weighted_return, calculate_sharpe_ratio,
 )
 from utils.insights import calculate_health_score, generate_portfolio_insights
 from utils.simulations import monte_carlo_simulation
