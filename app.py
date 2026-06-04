@@ -348,6 +348,13 @@ except Exception as exc:
     st.stop()
 
 weighted_return = calculate_weighted_return(portfolio_df)
+risk_free_rate = 7
+
+sharpe_ratio = calculate_sharpe_ratio(
+    weighted_return,
+    risk_free_rate,
+    volatility
+)
 risk_score = calculate_risk_score(portfolio_df)
 future_value = calculate_future_value(
     investment_amount, weighted_return, investment_duration
