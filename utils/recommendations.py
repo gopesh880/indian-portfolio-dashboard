@@ -165,3 +165,36 @@ def get_asset_allocation(profile):
     }
 
     return allocations[profile]
+def get_rebalancing_suggestions(
+    current_allocation,
+    target_allocation
+):
+
+    suggestions = []
+
+    for asset in current_allocation:
+
+        difference = (
+            target_allocation[asset]
+            - current_allocation[asset]
+        )
+
+        if difference > 0:
+
+            suggestions.append(
+                f"Buy {difference}% {asset}"
+            )
+
+        elif difference < 0:
+
+            suggestions.append(
+                f"Sell {abs(difference)}% {asset}"
+            )
+
+        else:
+
+            suggestions.append(
+                f"No change in {asset}"
+            )
+
+    return suggestions
