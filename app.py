@@ -374,7 +374,7 @@ simulation_df = monte_carlo_simulation(
     investment_duration,
 )
 
-metric_cols = st.columns(4)
+metric_cols = st.columns(5)
 with metric_cols[0]:
     metric_card("Expected return", f"{weighted_return:.2f}%", "Weighted by portfolio allocation")
 with metric_cols[1]:
@@ -383,6 +383,12 @@ with metric_cols[2]:
     metric_card("Health score", f"{health_score}/100", "Blend of risk balance and diversification")
 with metric_cols[3]:
     metric_card("Projected value", format_inr(future_value), f"After {investment_duration} years")
+with metric_cols[4]:
+    metric_card(
+        "Sharpe Ratio",
+        str(sharpe_ratio),
+        "Risk-adjusted return"
+    )
 
 second_metric_cols = st.columns(3)
 with second_metric_cols[0]:
