@@ -650,25 +650,23 @@ with backtest_tab:
     )
 
     col1, col2, col3, col4 = st.columns(4)
-
     with col1:
-        st.metric(
-            "Total Return",
-            f"{total_return:.2f}%" )
+    st.metric(
+        "Total Return",
+        f"{total_return:.2f}%"
+    )
     with col2:
-        st.metric(
-            "Sharpe Ratio",
-            f"{sharpe:.2f}"
-        )
-
+    st.metric(
+        "Sharpe Ratio",
+        f"{sharpe:.2f}"
+    )
     with col3:
-        st.metric(
-            "Max Drawdown",
-            f"{max_drawdown:.2f}%"
-        )
-
+    st.metric(
+        "Max Drawdown",
+        f"{max_drawdown:.2f}%"
+    )
     with col4:
-        st.metric(
-            "Volatility",
-            f"{volatility:.2f}%"
-        )
+    st.metric(
+        "Volatility",
+        f"{volatility:.2f}%"
+    )
