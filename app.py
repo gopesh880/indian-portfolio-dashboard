@@ -597,88 +597,110 @@ with backtest_tab:
             "Momentum"
         ]
     )
+
     selected_ticker = ETF_MAPPING[ticker]
-    price_data = get_price_data(
-    selected_ticker
-    )
-    if price_data.empty:
+
+    price_data = get_price_data(selected_ticker)
+
+    if price_data is None or price_data.empty:
         st.error(
-        f"No data available for {selected_ticker}"
-    )
-        st.stop()
-    close = price_data["Close"]
-
-    returns = (
-        close
-        .pct_change()
-        .dropna()
-    )
-
-    total_return = (
-        (
-            close.iloc[-1]
-            /
-            close.iloc[0]
-        ) - 1
-    ) * 100
-
-    volatility = (
-        returns.std()
-        * (252 ** 0.5)
-        * 100
-    )
-
-    sharpe = (
-        returns.mean() * 252
-    ) / (
-        returns.std() * (252 ** 0.5)
-    )
-
-    rolling_max = (
-        close
-        .cummax()
-    )
-    drawdown = (
-        close
-        - rolling_max
-    ) / rolling_max
-    max_drawdown = (
-        drawdown.min()
-        * 100
-    )
-
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.metric(
-            "Total Return",
-            f"{total_return:.2f}%"
+            f"No market data available for {selected_ticker}"
         )
-    with col2:
-        st.metric(
-            "Sharpe Ratio",
-            f"{sharpe:.2f}"
+    else:
+
+        # Handle Yahoo Finance weird column structures
+        if isinstance(price_data["Close"], pd.DataFrame):
+            close = price_data["Close"].iloc[:, 0]
+        else:
+            close = price_data["Close"]
+
+        close = pd.Series(close).dropna()
+
+        returns = close.pct_change().dropna()
+
+        total_return = (
+            (close.iloc[-1] / close.iloc[0]) - 1
+        ) * 100
+
+        volatility_bt = (
+            returns.std()
+            * (252 ** 0.5)
+            * 100
         )
-    with col3:
-        st.metric(
-            "Max Drawdown",
-            f"{max_drawdown:.2f}%"
+
+        sharpe_bt = (
+            returns.mean() * 252
+        ) / (
+            returns.std() * (252 ** 0.5)
         )
-    with col4:
-        st.metric(
-            "Volatility",
-            f"{volatility:.2f}%"
+
+        rolling_max = close.cummax()
+
+        drawdown = (
+            close - rolling_max
+        ) / rolling_max
+
+        max_drawdown = (
+            drawdown.min()
+            * 100
         )
-    st.markdown("---")
-    st.subheader(
-    f"{ticker} Price History"
-    )
-    st.line_chart(close)
-    st.subheader("Drawdown")
-    st.line_chart(drawdown)
-    st.subheader("Daily Return Distribution")
-    hist_df = pd.DataFrame(
-    {"Returns": returns}
-    )
-    st.bar_chart(
-    hist_df["Returns"]
-    )
+
+        col1, col2, col3, col4 = st.columns(4)
+
+        with col1:
+            st.metric(
+                "Total Return",
+                f"{float(total_return):.2f}%"
+            )
+
+        with col2:
+            st.metric(
+                "Sharpe Ratio",
+                f"{float(sharpe_bt):.2f}"
+            )
+
+        with col3:
+            st.metric(
+                "Max Drawdown",
+                f"{float(max_drawdown):.2f}%"
+            )
+
+        with col4:
+            st.metric(
+                "Volatility",
+                f"{float(volatility_bt):.2f}%"
+            )
+
+        st.markdown("---")
+
+        st.subheader(
+            f"{ticker} Price History"
+        )
+
+        chart_df = pd.DataFrame(
+            {"Price": close}
+        )
+
+        st.line_chart(chart_df)
+
+        st.subheader(
+            "Drawdown"
+        )
+
+        drawdown_df = pd.DataFrame(
+            {"Drawdown": drawdown}
+        )
+
+        st.line_chart(drawdown_df)
+
+        st.subheader(
+            "Daily Return Distribution"
+        )
+
+        returns_df = pd.DataFrame(
+            {"Returns": returns}
+        )
+
+        st.bar_chart(
+            returns_df["Returns"]
+        )
