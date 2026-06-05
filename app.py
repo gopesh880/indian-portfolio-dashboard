@@ -2,6 +2,8 @@ from pathlib import Path
 
 import pandas as pd
 import streamlit as st
+from utils.market_data import get_price_data
+from utils.tickers import ETF_MAPPING
 
 from charts.portfolio_charts import (
     create_allocation_chart,
@@ -582,58 +584,81 @@ with backtest_tab:
 
     st.header("Quant Strategy Backtesting")
 
-    ticker = st.selectbox(
-        "Select Asset",
-        [
-            "AAPL",
-            "MSFT",
-            "NVDA",
-            "RELIANCE.NS",
-            "TCS.NS"
-        ]
+    ticker = st.selectbox(...)
+
+    strategy = st.selectbox(...)
+
+    selected_ticker = ETF_MAPPING[ticker]
+
+    price_data = get_price_data(
+        selected_ticker
     )
 
-    strategy = st.selectbox(
-        "Strategy",
-        [
-            "EMA Crossover",
-            "RSI Strategy",
-            "Momentum"
-        ]
+    # <-- PUT REAL METRICS HERE
+
+    returns = (
+        price_data["Close"]
+        .pct_change()
+        .dropna()
+    )
+
+    total_return = (
+        (
+            price_data["Close"].iloc[-1]
+            /
+            price_data["Close"].iloc[0]
+        ) - 1
+    ) * 100
+
+    volatility = (
+        returns.std()
+        * (252 ** 0.5)
+        * 100
+    )
+
+    sharpe = (
+        returns.mean() * 252
+    ) / (
+        returns.std() * (252 ** 0.5)
+    )
+
+    rolling_max = (
+        price_data["Close"]
+        .cummax()
+    )
+
+    drawdown = (
+        price_data["Close"]
+        - rolling_max
+    ) / rolling_max
+
+    max_drawdown = (
+        drawdown.min()
+        * 100
     )
 
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-        st.metric("Total Return", "24.8%")
+        st.metric(
+            "Total Return",
+            f"{total_return:.2f}%"
+        )
 
     with col2:
-        st.metric("Sharpe Ratio", "1.42")
+        st.metric(
+            "Sharpe Ratio",
+            f"{sharpe:.2f}"
+        )
 
     with col3:
-        st.metric("Max Drawdown", "-12.5%")
+        st.metric(
+            "Max Drawdown",
+            f"{max_drawdown:.2f}%"
+        )
 
     with col4:
-        st.metric("Win Rate", "58%")
-
-    signals_df = pd.DataFrame({
-        "Date": [
-            "2024-01-15",
-            "2024-03-02",
-            "2024-06-11",
-            "2024-08-21"
-        ],
-        "Signal": [
-            "BUY",
-            "SELL",
-            "BUY",
-            "SELL"
-        ]
-    })
-
-    st.subheader("Trade Signals")
-
-    st.dataframe(
-        signals_df,
-        use_container_width=True
-    )
+        st.metric(
+            "Volatility",
+            f"{volatility:.2f}%"
+        )
