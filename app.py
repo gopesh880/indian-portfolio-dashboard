@@ -598,27 +598,27 @@ with backtest_tab:
         ]
     )
     selected_ticker = ETF_MAPPING[ticker]
-
     price_data = get_price_data(
-        selected_ticker
+    selected_ticker
     )
-    st.write(selected_ticker)
-    st.write(price_data.head())
-    st.write(price_data.shape)
-
-    # <-- PUT REAL METRICS HERE
+    if price_data.empty:
+    st.error(
+        f"No data available for {selected_ticker}"
+    )
+    st.stop()
+    close = price_data["Close"]
 
     returns = (
-        price_data["Close"]
+        close
         .pct_change()
         .dropna()
     )
 
     total_return = (
         (
-            price_data["Close"].iloc[-1]
+            close.iloc[-1]
             /
-            price_data["Close"].iloc[0]
+            close.iloc[0]
         ) - 1
     ) * 100
 
@@ -635,15 +635,13 @@ with backtest_tab:
     )
 
     rolling_max = (
-        price_data["Close"]
+        close
         .cummax()
     )
-
     drawdown = (
-        price_data["Close"]
+        close
         - rolling_max
     ) / rolling_max
-
     max_drawdown = (
         drawdown.min()
         * 100
@@ -670,3 +668,22 @@ with backtest_tab:
             "Volatility",
             f"{volatility:.2f}%"
         )
+st.markdown("---")
+
+st.subheader(
+    f"{ticker} Price History"
+)
+
+st.line_chart(close)
+st.subheader("Drawdown")
+
+st.line_chart(drawdown)
+st.subheader("Daily Return Distribution")
+
+hist_df = pd.DataFrame(
+    {"Returns": returns}
+)
+
+st.bar_chart(
+    hist_df["Returns"]
+)
