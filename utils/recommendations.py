@@ -61,6 +61,27 @@ def get_investment_suggestions(profile, goal):
             suggestions[("Moderate", "Wealth Creation")]
         )
     )
+def get_asset_allocation(profile):
+
+    allocations = {
+        "Conservative": {
+            "Equity": 40,
+            "Debt": 50,
+            "Gold": 10,
+        },
+        "Moderate": {
+            "Equity": 60,
+            "Debt": 30,
+            "Gold": 10,
+        },
+        "Aggressive": {
+            "Equity": 80,
+            "Debt": 10,
+            "Gold": 10,
+        },
+    }
+
+    return allocations[profile]
 def get_rebalancing_suggestions(
     current_allocation,
     target_allocation
