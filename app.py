@@ -407,8 +407,13 @@ with second_metric_cols[1]:
 with second_metric_cols[2]:
     metric_card("Diversification", f"{diversification_score}/100", "Higher means less concentrated")
 
-analytics_tab, simulation_tab, education_tab = st.tabs(
-    ["Portfolio Analytics", "Simulation & Insights", "Learn Investing"]
+analytics_tab, simulation_tab, education_tab, amc_tab = st.tabs(
+    [
+        "Portfolio Analytics",
+        "Simulation & Insights",
+        "Learn Investing",
+        "AMC Analytics"
+    ]
 )
 
 with analytics_tab:
@@ -527,3 +532,51 @@ st.subheader("Portfolio Rebalancing")
 
 for suggestion in rebalancing_suggestions:
     st.write(suggestion)
+with amc_tab:
+
+    st.markdown(
+        '<div class="section-title">AMC Analytics</div>',
+        unsafe_allow_html=True
+    )
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        st.metric("Total AUM", "₹8.5 Trillion")
+
+    with col2:
+        st.metric("ETF Count", "22")
+
+    with col3:
+        st.metric("Index Funds", "14")
+
+    with col4:
+        st.metric("Active Funds", "37")
+
+    st.markdown("---")
+
+    amc_df = pd.DataFrame({
+        "Fund": [
+            "HDFC Flexi Cap Fund",
+            "HDFC Mid Cap Opportunities Fund",
+            "HDFC Balanced Advantage Fund",
+            "HDFC Small Cap Fund",
+            "HDFC Nifty 50 Index Fund"
+        ],
+        "Category": [
+            "Flexi Cap",
+            "Mid Cap",
+            "Hybrid",
+            "Small Cap",
+            "Index"
+        ],
+        "Return (%)": [
+            18.5,
+            21.2,
+            13.1,
+            24.8,
+            14.6
+        ]
+    })
+
+    st.dataframe(amc_df, use_container_width=True)
