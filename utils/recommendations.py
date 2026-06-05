@@ -144,7 +144,6 @@ def get_investment_suggestions(profile):
     }
 
     return pd.DataFrame(suggestions[profile])
-def get_investment_suggestions(profile, goal):
    def get_investment_suggestions(profile, goal):
 
     suggestions = {
