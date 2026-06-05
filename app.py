@@ -654,9 +654,7 @@ with backtest_tab:
     with col1:
         st.metric(
             "Total Return",
-            f"{total_return:.2f}%"
-        )
-
+            f"{total_return:.2f}%" )
     with col2:
         st.metric(
             "Sharpe Ratio",
