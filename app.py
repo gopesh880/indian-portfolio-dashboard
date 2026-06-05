@@ -582,28 +582,59 @@ with amc_tab:
     st.dataframe(amc_df, use_container_width=True)
 with backtest_tab:
 
-    st.header("Quant Strategy Backtesting")
+   st.header("Quant Strategy Backtesting")
 
-    ticker = st.selectbox(
-        "Select Asset",
-        [
-            "AAPL",
-            "MSFT",
-            "NVDA",
-            "RELIANCE.NS",
-            "TCS.NS"
+ticker = st.selectbox(
+    "Select Asset",
+    [
+        "AAPL",
+        "MSFT",
+        "NVDA",
+        "RELIANCE.NS",
+        "TCS.NS"
+    ]
+)
+
+strategy = st.selectbox(
+    "Strategy",
+    [
+        "EMA Crossover",
+        "RSI Strategy",
+        "Momentum"
+    ]
+)
+
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    st.metric("Total Return", "24.8%")
+
+with col2:
+    st.metric("Sharpe Ratio", "1.42")
+
+with col3:
+    st.metric("Max Drawdown", "-12.5%")
+
+with col4:
+    st.metric("Win Rate", "58%")
+    signals_df = pd.DataFrame({
+        "Date": [
+            "2024-01-15",
+            "2024-03-02",
+            "2024-06-11",
+            "2024-08-21"
+        ],
+        "Signal": [
+            "BUY",
+            "SELL",
+            "BUY",
+            "SELL"
         ]
-    )
+    })
 
-    strategy = st.selectbox(
-        "Strategy",
-        [
-            "EMA Crossover",
-            "RSI Strategy",
-            "Momentum"
-        ]
-    )
+    st.subheader("Trade Signals")
 
-    st.info(
-        f"Selected Strategy: {strategy} on {ticker}"
+    st.dataframe(
+        signals_df,
+        use_container_width=True
     )
