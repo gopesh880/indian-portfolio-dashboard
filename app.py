@@ -584,9 +584,19 @@ with backtest_tab:
 
     st.header("Quant Strategy Backtesting")
 
-    ticker = st.selectbox(...)
-
-    strategy = st.selectbox(...)
+    ticker = st.selectbox(
+    "Select Asset",
+    list(ETF_MAPPING.keys())
+    )
+ 
+    strategy = st.selectbox(
+    "Strategy",
+    [
+        "EMA Crossover",
+        "RSI Strategy",
+        "Momentum"
+    ]
+    )
 
     selected_ticker = ETF_MAPPING[ticker]
 
