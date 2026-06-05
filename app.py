@@ -592,58 +592,151 @@ with backtest_tab:
     strategy = st.selectbox(
         "Strategy",
         [
+            "Buy & Hold",
             "EMA Crossover",
-            "RSI Strategy",
             "Momentum"
         ]
     )
 
     selected_ticker = ETF_MAPPING[ticker]
 
-    price_data = get_price_data(selected_ticker)
+    price_data = get_price_data(
+        selected_ticker
+    )
 
-    if price_data is None or price_data.empty:
+    if price_data.empty:
+
         st.error(
-            f"No market data available for {selected_ticker}"
+            f"No market data found for {selected_ticker}"
         )
+
     else:
 
-        # Handle Yahoo Finance weird column structures
-        if isinstance(price_data["Close"], pd.DataFrame):
-            close = price_data["Close"].iloc[:, 0]
+        # Handle Yahoo Finance format
+        if isinstance(
+            price_data["Close"],
+            pd.DataFrame
+        ):
+            close = (
+                price_data["Close"]
+                .iloc[:, 0]
+            )
         else:
-            close = price_data["Close"]
+            close = (
+                price_data["Close"]
+            )
 
-        close = pd.Series(close).dropna()
+        close = close.dropna()
 
-        returns = close.pct_change().dropna()
+        returns = (
+            close
+            .pct_change()
+            .dropna()
+        )
+
+        # ==========================
+        # STRATEGIES
+        # ==========================
+
+        if strategy == "EMA Crossover":
+
+            ema20 = (
+                close
+                .ewm(span=20)
+                .mean()
+            )
+
+            ema50 = (
+                close
+                .ewm(span=50)
+                .mean()
+            )
+
+            signal = (
+                ema20 > ema50
+            ).astype(int)
+
+            strategy_returns = (
+                returns
+                *
+                signal.shift(1)
+                .fillna(0)
+            )
+
+        elif strategy == "Momentum":
+
+            momentum = (
+                close
+                /
+                close.shift(126)
+            ) - 1
+
+            signal = (
+                momentum > 0
+            ).astype(int)
+
+            strategy_returns = (
+                returns
+                *
+                signal.shift(1)
+                .fillna(0)
+            )
+
+        else:
+
+            strategy_returns = returns
+
+        # ==========================
+        # EQUITY CURVE
+        # ==========================
+
+        equity_curve = (
+            1 +
+            strategy_returns
+        ).cumprod()
 
         total_return = (
-            (close.iloc[-1] / close.iloc[0]) - 1
+            equity_curve.iloc[-1]
+            - 1
         ) * 100
 
         volatility_bt = (
-            returns.std()
-            * (252 ** 0.5)
-            * 100
+            strategy_returns.std()
+            *
+            (252 ** 0.5)
+            *
+            100
         )
 
         sharpe_bt = (
-            returns.mean() * 252
+            strategy_returns.mean()
+            *
+            252
         ) / (
-            returns.std() * (252 ** 0.5)
+            strategy_returns.std()
+            *
+            (252 ** 0.5)
         )
 
-        rolling_max = close.cummax()
+        rolling_max = (
+            equity_curve
+            .cummax()
+        )
 
         drawdown = (
-            close - rolling_max
+            equity_curve
+            -
+            rolling_max
         ) / rolling_max
 
         max_drawdown = (
             drawdown.min()
             * 100
         )
+
+        # ==========================
+        # METRICS
+        # ==========================
 
         col1, col2, col3, col4 = st.columns(4)
 
@@ -674,33 +767,34 @@ with backtest_tab:
         st.markdown("---")
 
         st.subheader(
-            f"{ticker} Price History"
+            f"{strategy} Equity Curve"
         )
 
-        chart_df = pd.DataFrame(
-            {"Price": close}
+        st.line_chart(
+            equity_curve
         )
 
-        st.line_chart(chart_df)
+        st.subheader(
+            "Price History"
+        )
+
+        st.line_chart(
+            close
+        )
 
         st.subheader(
             "Drawdown"
         )
 
-        drawdown_df = pd.DataFrame(
-            {"Drawdown": drawdown}
+        st.line_chart(
+            drawdown
         )
-
-        st.line_chart(drawdown_df)
 
         st.subheader(
-            "Daily Return Distribution"
+            "Recent Market Data"
         )
 
-        returns_df = pd.DataFrame(
-            {"Returns": returns}
-        )
-
-        st.bar_chart(
-            returns_df["Returns"]
+        st.dataframe(
+            price_data.tail(),
+            use_container_width=True
         )
