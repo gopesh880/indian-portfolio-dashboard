@@ -602,10 +602,10 @@ with backtest_tab:
     selected_ticker
     )
     if price_data.empty:
-    st.error(
+        st.error(
         f"No data available for {selected_ticker}"
     )
-    st.stop()
+        st.stop()
     close = price_data["Close"]
 
     returns = (
@@ -668,22 +668,17 @@ with backtest_tab:
             "Volatility",
             f"{volatility:.2f}%"
         )
-st.markdown("---")
-
-st.subheader(
+    st.markdown("---")
+    st.subheader(
     f"{ticker} Price History"
-)
-
-st.line_chart(close)
-st.subheader("Drawdown")
-
-st.line_chart(drawdown)
-st.subheader("Daily Return Distribution")
-
-hist_df = pd.DataFrame(
+    )
+    st.line_chart(close)
+    st.subheader("Drawdown")
+    st.line_chart(drawdown)
+    st.subheader("Daily Return Distribution")
+    hist_df = pd.DataFrame(
     {"Returns": returns}
-)
-
-st.bar_chart(
+    )
+    st.bar_chart(
     hist_df["Returns"]
-)
+    )
