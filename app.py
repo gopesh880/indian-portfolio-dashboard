@@ -602,6 +602,9 @@ with backtest_tab:
     price_data = get_price_data(
         selected_ticker
     )
+    st.write(selected_ticker)
+    st.write(price_data.head())
+    st.write(price_data.shape)
 
     # <-- PUT REAL METRICS HERE
 
