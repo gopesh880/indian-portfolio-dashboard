@@ -407,15 +407,15 @@ with second_metric_cols[1]:
 with second_metric_cols[2]:
     metric_card("Diversification", f"{diversification_score}/100", "Higher means less concentrated")
 
-analytics_tab, simulation_tab, education_tab, amc_tab = st.tabs(
+analytics_tab, simulation_tab, education_tab, amc_tab, backtest_tab = st.tabs(
     [
         "Portfolio Analytics",
         "Simulation & Insights",
         "Learn Investing",
-        "AMC Analytics"
+        "AMC Analytics",
+        "Quant Backtesting"
     ]
 )
-
 with analytics_tab:
     st.markdown('<div class="section-title">Portfolio Analytics</div>', unsafe_allow_html=True)
 
@@ -580,3 +580,30 @@ with amc_tab:
     })
 
     st.dataframe(amc_df, use_container_width=True)
+with backtest_tab:
+
+    st.header("Quant Strategy Backtesting")
+
+    ticker = st.selectbox(
+        "Select Asset",
+        [
+            "AAPL",
+            "MSFT",
+            "NVDA",
+            "RELIANCE.NS",
+            "TCS.NS"
+        ]
+    )
+
+    strategy = st.selectbox(
+        "Strategy",
+        [
+            "EMA Crossover",
+            "RSI Strategy",
+            "Momentum"
+        ]
+    )
+
+    st.info(
+        f"Selected Strategy: {strategy} on {ticker}"
+    )
