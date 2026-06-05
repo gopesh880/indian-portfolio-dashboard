@@ -468,7 +468,10 @@ with simulation_tab:
         )
 
     st.markdown('<div class="section-title">Explore Investment Ideas</div>', unsafe_allow_html=True)
-    recommendation_df = get_investment_suggestions(investor_profile)
+    recommendation_df = get_investment_suggestions(
+    investor_profile,
+    goal
+)
     idea_cols = st.columns(3)
 
     for index, row in recommendation_df.iterrows():
