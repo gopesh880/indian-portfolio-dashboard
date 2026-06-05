@@ -302,6 +302,15 @@ investor_profile = st.sidebar.selectbox(
     ["Conservative", "Moderate", "Aggressive"],
     index=1,
 )
+goal = st.sidebar.selectbox(
+    "Investment Goal",
+    [
+        "Wealth Creation",
+        "Retirement",
+        "Child Education",
+        "House Purchase"
+    ]
+)
 recommended_allocation = get_asset_allocation(
     investor_profile
 )
