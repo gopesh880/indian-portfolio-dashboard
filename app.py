@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pandas as pd
 import streamlit as st
-from utils.market_data import get_price_data
-from utils.tickers import ETF_MAPPING
+from utils.utils.market_data import get_price_data
+from utils.utils.tickers import ETF_MAPPING
 
 from charts.portfolio_charts import (
     create_allocation_chart,
