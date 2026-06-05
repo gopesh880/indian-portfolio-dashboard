@@ -604,29 +604,39 @@ with backtest_tab:
         selected_ticker
     )
 
-    if price_data.empty:
+    if price_data is None or price_data.empty:
 
         st.error(
-            f"No market data found for {selected_ticker}"
+            f"No market data available for {selected_ticker}"
         )
 
     else:
 
-        # Handle Yahoo Finance format
-        if isinstance(
-            price_data["Close"],
-            pd.DataFrame
-        ):
+        # Handle Yahoo Finance DataFrame
+        try:
+
+            if isinstance(
+                price_data["Close"],
+                pd.DataFrame
+            ):
+                close = (
+                    price_data["Close"]
+                    .iloc[:, 0]
+                )
+            else:
+                close = (
+                    price_data["Close"]
+                )
+
+        except Exception:
+
             close = (
-                price_data["Close"]
-                .iloc[:, 0]
-            )
-        else:
-            close = (
-                price_data["Close"]
+                price_data.iloc[:, 3]
             )
 
-        close = close.dropna()
+        close = pd.Series(
+            close
+        ).dropna()
 
         returns = (
             close
@@ -634,9 +644,9 @@ with backtest_tab:
             .dropna()
         )
 
-        # ==========================
+        # ==================================
         # STRATEGIES
-        # ==========================
+        # ==================================
 
         if strategy == "EMA Crossover":
 
@@ -684,23 +694,27 @@ with backtest_tab:
 
         else:
 
-            strategy_returns = returns
+            strategy_returns = (
+                returns
+            )
 
-        # ==========================
-        # EQUITY CURVE
-        # ==========================
+        # ==================================
+        # PERFORMANCE METRICS
+        # ==================================
 
         equity_curve = (
             1 +
             strategy_returns
         ).cumprod()
 
-        total_return = (
-            equity_curve.iloc[-1]
-            - 1
-        ) * 100
+        total_return = float(
+            (
+                equity_curve.iloc[-1]
+                - 1
+            ) * 100
+        )
 
-        volatility_bt = (
+        volatility_bt = float(
             strategy_returns.std()
             *
             (252 ** 0.5)
@@ -708,14 +722,18 @@ with backtest_tab:
             100
         )
 
-        sharpe_bt = (
-            strategy_returns.mean()
-            *
-            252
-        ) / (
-            strategy_returns.std()
-            *
-            (252 ** 0.5)
+        sharpe_bt = float(
+            (
+                strategy_returns.mean()
+                *
+                252
+            )
+            /
+            (
+                strategy_returns.std()
+                *
+                (252 ** 0.5)
+            )
         )
 
         rolling_max = (
@@ -729,66 +747,100 @@ with backtest_tab:
             rolling_max
         ) / rolling_max
 
-        max_drawdown = (
+        max_drawdown = float(
             drawdown.min()
             * 100
         )
 
-        # ==========================
-        # METRICS
-        # ==========================
+        # ==================================
+        # METRIC CARDS
+        # ==================================
 
         col1, col2, col3, col4 = st.columns(4)
 
         with col1:
             st.metric(
                 "Total Return",
-                f"{float(total_return):.2f}%"
+                f"{total_return:.2f}%"
             )
 
         with col2:
             st.metric(
                 "Sharpe Ratio",
-                f"{float(sharpe_bt):.2f}"
+                f"{sharpe_bt:.2f}"
             )
 
         with col3:
             st.metric(
                 "Max Drawdown",
-                f"{float(max_drawdown):.2f}%"
+                f"{max_drawdown:.2f}%"
             )
 
         with col4:
             st.metric(
                 "Volatility",
-                f"{float(volatility_bt):.2f}%"
+                f"{volatility_bt:.2f}%"
             )
 
         st.markdown("---")
+
+        # ==================================
+        # EQUITY CURVE
+        # ==================================
 
         st.subheader(
             f"{strategy} Equity Curve"
         )
 
-        st.line_chart(
-            equity_curve
+        equity_df = pd.DataFrame(
+            {
+                "Equity Curve": equity_curve
+            }
         )
+
+        st.line_chart(
+            equity_df
+        )
+
+        # ==================================
+        # PRICE HISTORY
+        # ==================================
 
         st.subheader(
-            "Price History"
+            f"{ticker} Price History"
+        )
+
+        close_df = pd.DataFrame(
+            {
+                "Price": close
+            }
         )
 
         st.line_chart(
-            close
+            close_df
         )
+
+        # ==================================
+        # DRAWDOWN
+        # ==================================
 
         st.subheader(
             "Drawdown"
         )
 
-        st.line_chart(
-            drawdown
+        drawdown_df = pd.DataFrame(
+            {
+                "Drawdown": drawdown
+            }
         )
+
+        st.line_chart(
+            drawdown_df
+        )
+
+        # ==================================
+        # RECENT DATA
+        # ==================================
 
         st.subheader(
             "Recent Market Data"
