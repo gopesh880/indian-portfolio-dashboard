@@ -691,11 +691,10 @@ with mf_tab:
                 "NAV": close
             }
         )
-
-st.line_chart(
-    nav_df
-)
-        st.subheader(
+    st.line_chart(
+        nav_df
+    )
+    st.subheader(
             "Recent NAV Data"
         )
 
