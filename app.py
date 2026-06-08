@@ -680,6 +680,7 @@ with mf_tab:
             )
 
         st.markdown("---")
+
         st.write(close.head())
 
         st.subheader(
@@ -691,10 +692,12 @@ with mf_tab:
                 "NAV": close
             }
         )
-    st.line_chart(
-        nav_df
-    )
-    st.subheader(
+
+        st.line_chart(
+            nav_df
+        )
+
+        st.subheader(
             "Recent NAV Data"
         )
 
