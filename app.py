@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import yfinance as yf
 import pandas as pd
 import streamlit as st
 from utils.market_data import get_price_data
