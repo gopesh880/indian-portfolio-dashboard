@@ -4,7 +4,11 @@ import yfinance as yf
 import pandas as pd
 import streamlit as st
 from utils.market_data import get_price_data
-from utils.tickers import ETF_MAPPING
+from utils.tickers import (
+    ETF_MAPPING,
+    MF_MAPPING
+)
+
 
 from charts.portfolio_charts import (
     create_allocation_chart,
