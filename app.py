@@ -680,15 +680,21 @@ with mf_tab:
             )
 
         st.markdown("---")
+        st.write(close.head())
 
         st.subheader(
             "NAV History"
         )
 
-        st.line_chart(
-            close
+        nav_df = pd.DataFrame(
+            {
+                "NAV": close
+            }
         )
 
+st.line_chart(
+    nav_df
+)
         st.subheader(
             "Recent NAV Data"
         )
