@@ -6,7 +6,7 @@ import streamlit as st
 from utils.market_data import get_price_data
 from utils.tickers import (
     ETF_MAPPING,
-    MF_MAPPING
+    MF_MAPPING, BENCHMARK_MAPPING
 )
 
 
@@ -622,7 +622,14 @@ with backtest_tab:
         selected_ticker
     )
 
-    if price_data is None or price_data.empty:
+    benchmark_data = get_price_data(
+        "^NSEI"
+    )
+
+    if (
+        price_data is None
+        or price_data.empty
+    ):
 
         st.error(
             f"No market data available for {selected_ticker}"
@@ -630,7 +637,6 @@ with backtest_tab:
 
     else:
 
-        # Handle Yahoo Finance DataFrame
         try:
 
             if isinstance(
@@ -656,15 +662,25 @@ with backtest_tab:
             close
         ).dropna()
 
+        benchmark_close = (
+            benchmark_data["Close"]
+        ).dropna()
+
         returns = (
             close
             .pct_change()
             .dropna()
         )
 
-        # ==================================
+        benchmark_returns = (
+            benchmark_close
+            .pct_change()
+            .dropna()
+        )
+
+        # ==========================
         # STRATEGIES
-        # ==================================
+        # ==========================
 
         if strategy == "EMA Crossover":
 
@@ -716,13 +732,18 @@ with backtest_tab:
                 returns
             )
 
-        # ==================================
-        # PERFORMANCE METRICS
-        # ==================================
+        # ==========================
+        # PERFORMANCE
+        # ==========================
 
         equity_curve = (
             1 +
             strategy_returns
+        ).cumprod()
+
+        benchmark_curve = (
+            1 +
+            benchmark_returns
         ).cumprod()
 
         total_return = float(
@@ -730,6 +751,18 @@ with backtest_tab:
                 equity_curve.iloc[-1]
                 - 1
             ) * 100
+        )
+
+        benchmark_return = float(
+            (
+                benchmark_curve.iloc[-1]
+                - 1
+            ) * 100
+        )
+
+        alpha = (
+            total_return
+            - benchmark_return
         )
 
         volatility_bt = float(
@@ -770,95 +803,93 @@ with backtest_tab:
             * 100
         )
 
-        # ==================================
-        # METRIC CARDS
-        # ==================================
+        # ==========================
+        # METRICS
+        # ==========================
 
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2, col3, col4, col5 = st.columns(5)
 
         with col1:
             st.metric(
-                "Total Return",
+                "Strategy Return",
                 f"{total_return:.2f}%"
             )
 
         with col2:
             st.metric(
+                "Benchmark Return",
+                f"{benchmark_return:.2f}%"
+            )
+
+        with col3:
+            st.metric(
+                "Alpha",
+                f"{alpha:.2f}%"
+            )
+
+        with col4:
+            st.metric(
                 "Sharpe Ratio",
                 f"{sharpe_bt:.2f}"
             )
 
-        with col3:
+        with col5:
             st.metric(
                 "Max Drawdown",
                 f"{max_drawdown:.2f}%"
             )
 
-        with col4:
-            st.metric(
-                "Volatility",
-                f"{volatility_bt:.2f}%"
-            )
-
         st.markdown("---")
 
-        # ==================================
-        # EQUITY CURVE
-        # ==================================
+        # ==========================
+        # STRATEGY VS BENCHMARK
+        # ==========================
 
         st.subheader(
-            f"{strategy} Equity Curve"
+            "Strategy vs Benchmark"
         )
 
-        equity_df = pd.DataFrame(
+        comparison_df = pd.DataFrame(
             {
-                "Equity Curve": equity_curve
+                "Strategy":
+                equity_curve * 100,
+
+                "Nifty 50":
+                benchmark_curve * 100
             }
         )
 
         st.line_chart(
-            equity_df
+            comparison_df
         )
 
-        # ==================================
+        # ==========================
         # PRICE HISTORY
-        # ==================================
+        # ==========================
 
         st.subheader(
             f"{ticker} Price History"
         )
 
-        close_df = pd.DataFrame(
-            {
-                "Price": close
-            }
-        )
-
         st.line_chart(
-            close_df
+            close
         )
 
-        # ==================================
+        # ==========================
         # DRAWDOWN
-        # ==================================
+        # ==========================
 
         st.subheader(
-            "Drawdown"
-        )
-
-        drawdown_df = pd.DataFrame(
-            {
-                "Drawdown": drawdown
-            }
+            "Drawdown Analysis"
         )
 
         st.line_chart(
-            drawdown_df
+            drawdown
         )
 
-        # ==================================
+        # ==========================
         # RECENT DATA
-        # ==================================
+        # ==========================
 
         st.subheader(
             "Recent Market Data"
