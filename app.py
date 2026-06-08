@@ -627,44 +627,45 @@ with backtest_tab:
     )
 
     if (
-        price_data is None
-        or price_data.empty
+        price_data.empty
+        or benchmark_data.empty
     ):
 
         st.error(
-            f"No market data available for {selected_ticker}"
+            "Unable to fetch market data."
         )
 
     else:
 
-        try:
+        # ==========================
+        # CLEAN PRICE DATA
+        # ==========================
 
-            if isinstance(
-                price_data["Close"],
-                pd.DataFrame
-            ):
-                close = (
-                    price_data["Close"]
-                    .iloc[:, 0]
-                )
-            else:
-                close = (
-                    price_data["Close"]
-                )
+        close = price_data["Close"]
 
-        except Exception:
+        if isinstance(
+            close,
+            pd.DataFrame
+        ):
+            close = close.iloc[:, 0]
 
-            close = (
-                price_data.iloc[:, 3]
-            )
+        benchmark_close = benchmark_data["Close"]
 
-        close = pd.Series(
-            close
-        ).dropna()
+        if isinstance(
+            benchmark_close,
+            pd.DataFrame
+        ):
+            benchmark_close = benchmark_close.iloc[:, 0]
+
+        close = close.dropna()
 
         benchmark_close = (
-            benchmark_data["Close"]
-        ).dropna()
+            benchmark_close.dropna()
+        )
+
+        # ==========================
+        # RETURNS
+        # ==========================
 
         returns = (
             close
@@ -679,7 +680,7 @@ with backtest_tab:
         )
 
         # ==========================
-        # STRATEGIES
+        # STRATEGY LOGIC
         # ==========================
 
         if strategy == "EMA Crossover":
@@ -713,7 +714,8 @@ with backtest_tab:
                 close
                 /
                 close.shift(126)
-            ) - 1
+                - 1
+            )
 
             signal = (
                 momentum > 0
@@ -733,7 +735,7 @@ with backtest_tab:
             )
 
         # ==========================
-        # PERFORMANCE
+        # EQUITY CURVES
         # ==========================
 
         equity_curve = (
@@ -746,34 +748,42 @@ with backtest_tab:
             benchmark_returns
         ).cumprod()
 
-        total_return = float(
+        # ==========================
+        # METRICS
+        # ==========================
+
+        total_return = round(
             (
                 equity_curve.iloc[-1]
                 - 1
-            ) * 100
+            ) * 100,
+            2
         )
 
-        benchmark_return = float(
+        benchmark_return = round(
             (
                 benchmark_curve.iloc[-1]
                 - 1
-            ) * 100
+            ) * 100,
+            2
         )
 
-        alpha = (
+        alpha = round(
             total_return
-            - benchmark_return
+            - benchmark_return,
+            2
         )
 
-        volatility_bt = float(
+        volatility_bt = round(
             strategy_returns.std()
             *
-            (252 ** 0.5)
+            np.sqrt(252)
             *
-            100
+            100,
+            2
         )
 
-        sharpe_bt = float(
+        sharpe_bt = round(
             (
                 strategy_returns.mean()
                 *
@@ -783,8 +793,9 @@ with backtest_tab:
             (
                 strategy_returns.std()
                 *
-                (252 ** 0.5)
-            )
+                np.sqrt(252)
+            ),
+            2
         )
 
         rolling_max = (
@@ -798,13 +809,14 @@ with backtest_tab:
             rolling_max
         ) / rolling_max
 
-        max_drawdown = float(
+        max_drawdown = round(
             drawdown.min()
-            * 100
+            * 100,
+            2
         )
 
         # ==========================
-        # METRICS
+        # DASHBOARD METRICS
         # ==========================
 
         col1, col2, col3, col4, col5 = st.columns(5)
@@ -812,41 +824,41 @@ with backtest_tab:
         with col1:
             st.metric(
                 "Strategy Return",
-                f"{total_return:.2f}%"
+                f"{total_return}%"
             )
 
         with col2:
             st.metric(
                 "Benchmark Return",
-                f"{benchmark_return:.2f}%"
+                f"{benchmark_return}%"
             )
 
         with col3:
             st.metric(
                 "Alpha",
-                f"{alpha:.2f}%"
+                f"{alpha}%"
             )
 
         with col4:
             st.metric(
                 "Sharpe Ratio",
-                f"{sharpe_bt:.2f}"
+                f"{sharpe_bt}"
             )
 
         with col5:
             st.metric(
                 "Max Drawdown",
-                f"{max_drawdown:.2f}%"
+                f"{max_drawdown}%"
             )
 
         st.markdown("---")
 
         # ==========================
-        # STRATEGY VS BENCHMARK
+        # STRATEGY VS NIFTY
         # ==========================
 
         st.subheader(
-            "Strategy vs Benchmark"
+            "Strategy vs Nifty"
         )
 
         comparison_df = pd.DataFrame(
@@ -854,7 +866,7 @@ with backtest_tab:
                 "Strategy":
                 equity_curve * 100,
 
-                "Nifty 50":
+                "Nifty":
                 benchmark_curve * 100
             }
         )
