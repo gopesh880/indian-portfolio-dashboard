@@ -19,3 +19,10 @@ MF_MAPPING = {
     "Nippon India Small Cap Fund":
     "0P0000XV9M.BO"
 }
+BENCHMARK_MAPPING = {
+    "Nifty 50 ETF": "^NSEI",
+    "Reliance": "^NSEI",
+    "TCS": "^NSEI",
+    "Infosys": "^NSEI",
+    "Gold ETF": "^NSEI"
+}
