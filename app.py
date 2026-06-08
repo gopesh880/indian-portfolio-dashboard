@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import numpy as np
 import yfinance as yf
 import pandas as pd
 import streamlit as st
