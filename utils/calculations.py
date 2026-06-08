@@ -97,14 +97,11 @@ def calculate_sip_future_value(
     months = years * 12
 
     future_value = monthly_investment * (
-        (
-            ((1 + monthly_rate) ** months) - 1
-        ) / monthly_rate
-    ) * (1 + monthly_rate)
+        ((1 + monthly_rate) ** months - 1)
+        / monthly_rate
+    )
 
     return round(future_value)
-
-
 # ----------------------------------------
 # INFLATION ADJUSTED VALUE
 # ----------------------------------------
