@@ -596,9 +596,107 @@ with mf_tab:
         list(MF_MAPPING.keys())
     )
 
-    st.success(
-        f"Selected Fund: {fund}"
+    selected_ticker = MF_MAPPING[fund]
+
+    mf_data = get_price_data(
+        selected_ticker
     )
+
+    if mf_data.empty:
+
+        st.error(
+            "Unable to fetch mutual fund data."
+        )
+
+    else:
+
+        close = mf_data["Close"]
+
+        if isinstance(
+            close,
+            pd.DataFrame
+        ):
+            close = close.iloc[:, 0]
+
+        close = close.dropna()
+
+        returns = (
+            close
+            .pct_change()
+            .dropna()
+        )
+
+        total_return = round(
+            (
+                close.iloc[-1]
+                /
+                close.iloc[0]
+                - 1
+            ) * 100,
+            2
+        )
+
+        volatility = round(
+            returns.std()
+            *
+            (252 ** 0.5)
+            *
+            100,
+            2
+        )
+
+        sharpe = round(
+            (
+                returns.mean()
+                * 252
+            )
+            /
+            (
+                returns.std()
+                *
+                (252 ** 0.5)
+            ),
+            2
+        )
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.metric(
+                "Total Return",
+                f"{total_return}%"
+            )
+
+        with col2:
+            st.metric(
+                "Volatility",
+                f"{volatility}%"
+            )
+
+        with col3:
+            st.metric(
+                "Sharpe Ratio",
+                f"{sharpe}"
+            )
+
+        st.markdown("---")
+
+        st.subheader(
+            "NAV History"
+        )
+
+        st.line_chart(
+            close
+        )
+
+        st.subheader(
+            "Recent NAV Data"
+        )
+
+        st.dataframe(
+            mf_data.tail(),
+            use_container_width=True
+        )
 with backtest_tab:
 
     st.header("Quant Strategy Backtesting")
