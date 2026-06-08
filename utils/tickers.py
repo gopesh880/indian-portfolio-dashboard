@@ -5,3 +5,17 @@ ETF_MAPPING = {
     "TCS": "TCS.NS",
     "Infosys": "INFY.NS"
 }
+MF_MAPPING = {
+
+    "HDFC Flexi Cap Fund":
+    "0P0000XVUH.BO",
+
+    "Parag Parikh Flexi Cap Fund":
+    "0P0001AINF.BO",
+
+    "Motilal Oswal Midcap Fund":
+    "0P0000YWL1.BO",
+
+    "Nippon India Small Cap Fund":
+    "0P0000XV9M.BO"
+}
