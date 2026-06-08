@@ -414,12 +414,13 @@ with second_metric_cols[1]:
 with second_metric_cols[2]:
     metric_card("Diversification", f"{diversification_score}/100", "Higher means less concentrated")
 
-analytics_tab, simulation_tab, education_tab, amc_tab, backtest_tab = st.tabs(
+analytics_tab, simulation_tab, education_tab, amc_tab, mf_tab, backtest_tab = st.tabs(
     [
         "Portfolio Analytics",
         "Simulation & Insights",
         "Learn Investing",
         "AMC Analytics",
+        "Mutual Fund Analytics",
         "Quant Backtesting"
     ]
 )
@@ -585,6 +586,18 @@ with amc_tab:
     })
 
     st.dataframe(amc_df, use_container_width=True)
+with mf_tab:
+
+    st.header("Mutual Fund Analytics")
+
+    fund = st.selectbox(
+        "Select Fund",
+        list(MF_MAPPING.keys())
+    )
+
+    st.success(
+        f"Selected Fund: {fund}"
+    )
 with backtest_tab:
 
     st.header("Quant Strategy Backtesting")
