@@ -270,8 +270,8 @@ st.markdown(
 st.markdown(
     """
     <section class="hero">
-        <p class="hero-eyebrow">Fund Management Analytics</p>
-        <h1>Mutual Fund & Portfolio Analytics Dashboard</h1>
+        <p class="hero-eyebrow">Quant Research & Portfolio Analytics</p>
+        <h1>Quant Portfolio Analytics Platform</h1>
         <p>
             Analyze portfolio allocation, diversification, risk,
             expected returns, inflation impact and long-term
